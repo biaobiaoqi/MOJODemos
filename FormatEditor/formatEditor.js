@@ -30,11 +30,35 @@ var labelFormatInfo = mstrmojo.insert({
 var w = mstrmojo.insert({
     scriptClass: "mstrmojo.VBox",
     placeholder: "topdiv",
+    cssClass: "formatEditorBox",
     children: [
         {
             scriptClass: "mstrmojo.Label",
             id: "customedLabel",
             text: 'Abc123',
+            bindings: { //It can not be fired when values changed.
+                cssText: function() {
+                    Alert("???");
+                    var styleText = "font-family" + ":" + mstrmojo.all.labelName.value + ";";
+                    styleText += "font-size" + ":" + mstrmojo.all.labelSize.value + ";";
+                    styleText += "color" + ":" + mstrmojo.all.labelColor.value + ";";
+                    if (mstrmojo.all.labelBold.checked === true) {
+                        styleText += "font-weight" + ":" + "bold" + ";";
+                    } else {
+                        styleText += "font-weight" + ":" + "normal" + ";";
+                    }
+
+                    if (mstrmojo.all.labelItalic.checked === true) {
+                        styleText += "font-style" + ":" + "italic" + ";";
+                    } else {
+                        styleText += "font-style" + ":" + "normal" + ";";
+                    }
+
+                    styleText += "border" + ":" + mstrmojo.all.labelBorderStyle.value + " " + mstrmojo.all.labelBorderSize.value + " " + mstrmojo.all.labelBorderColor.value;
+
+                    return styleText;
+                }
+            }
         },
         {
             scriptClass: "mstrmojo.FieldSet",
@@ -50,18 +74,13 @@ var w = mstrmojo.insert({
                                     children: [
                                         {
                                             scriptClass: "mstrmojo.Label",
-                                            text: "Font:",
+                                            text: "Name:",
                                             cssText: "white-space: nowrap"
                                         },
                                         {
-                                            scriptClass: "mstrmojo.List",
-                                            width: "75px",
-                                            id: "labelFont",
-                                            items: [
-                                                {did: 'Arial', n: 's'},
-                                                {did: 'Tahoma', n: 'm'}
-                                            ],
-                                            itemField: "n"
+                                            scriptClass: "mstrmojo.TextBox",
+                                            id: "labelName",
+                                            width: "75px"
                                         }
                                     ]
                                 },
@@ -74,14 +93,9 @@ var w = mstrmojo.insert({
                                             cssText: "white-space: nowrap"
                                         },
                                         {
-                                            scriptClass: "mstrmojo.List",
-                                            id: 'labelSize',
-                                            width: "75px",
-                                            items: [
-                                                {key: '10px'},
-                                                {key: '20px'}
-                                            ],
-                                            itemField: "key"
+                                            scriptClass: "mstrmojo.TextBox",
+                                            id: "labelSize",
+                                            width: "75px"
                                         }
                                     ]
                                 },
@@ -94,16 +108,9 @@ var w = mstrmojo.insert({
                                             cssText: "white-space: nowrap"
                                         },
                                         {
-                                            scriptClass: "mstrmojo.List",
-                                            id: 'labelColor',
-                                            width: "75px",
-                                            items: [
-                                                {key: 'red'},
-                                                {key: 'black'},
-                                                {key: 'blue'},
-                                                {key: 'yellow'}
-                                            ],
-                                            itemField: "key"
+                                            scriptClass: "mstrmojo.TextBox",
+                                            id: "labelColor",
+                                            width: "75px"
                                         }
                                     ]
                                 }
@@ -182,7 +189,6 @@ var w = mstrmojo.insert({
                                         {
                                             scriptClass: "mstrmojo.TextBox",
                                             id: 'labelBorderColor',
-                                            value: 'abc',
                                             width: "75px",
                                             onvalueChange: function(evt) {
                                                 this.set('value', this.value);
@@ -196,10 +202,10 @@ var w = mstrmojo.insert({
         },
         {
             scriptClass: "mstrmojo.Button",
+            cssClass: "applyButton",
             text: "Apply",
             onclick: function(evt) {
-
-                labelFormatInfo.font.font = mstrmojo.all.labelFont.value;
+                labelFormatInfo.font.name = mstrmojo.all.labelName.value;
                 labelFormatInfo.font.size = mstrmojo.all.labelSize.value;
                 labelFormatInfo.font.color = mstrmojo.all.labelColor.value;
                 labelFormatInfo.font.bold = mstrmojo.all.labelBold.checked;
@@ -209,20 +215,40 @@ var w = mstrmojo.insert({
                 labelFormatInfo.border.size = mstrmojo.all.labelBorderSize.value;
                 labelFormatInfo.border.color = mstrmojo.all.labelBorderColor.value;
 
-                mstrmojo.all.customedLabel.cssText = "color: " + labelFormatInfo.font.color
+                var styleCssText = "color: " + labelFormatInfo.font.color
                     + "; font-size: " + labelFormatInfo.font.size
-                    + "; font-family:" + labelFormatInfo.font.font
+                    + "; font-family:" + labelFormatInfo.font.name
                     + "; bold: " + labelFormatInfo.font.bold
                     + "; italic: " + labelFormatInfo.font.italic
                     + "; underline: " + labelFormatInfo.font.underline
                     + "; border-style: " + labelFormatInfo.border.style
                     + "; border-width: " + labelFormatInfo.border.size
                     + "; border-color: " + labelFormatInfo.border.color;
-
+                mstrmojo.all.customedLabel.cssText = styleCssText;
+                mstrmojo.all.oriLabel.cssText = styleCssText;
                 mstrmojo.all.customedLabel.render();
+
+                w.visible = false;
+                w.render();
+                oriLabel.visible = true;
+                oriLabel.render();
             }
         }
     ]
 });
 
-w.render();
+var oriLabel = mstrmojo.insert({
+    scriptClass: 'mstrmojo.Label',
+    placeholder: 'labeldiv',
+    id: 'oriLabel',
+    text: 'click to change format',
+    onclick: function(evt) {
+        oriLabel.visible = false;
+        w.visible = true;
+        w.render();
+        oriLabel.render();
+    }
+});
+
+w.visible = false;
+oriLabel.render();
