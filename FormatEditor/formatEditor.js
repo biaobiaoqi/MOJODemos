@@ -2,7 +2,6 @@
  * Created by syapeng on 7/10/2014.
  */
 var mstrConfig = mstrApp = {};
-mstrmojo.requiresCls("mstrmojo.List");
 
 var labelFormatInfo = mstrmojo.insert({
     scriptClass: "mstrmojo.Model",
@@ -10,9 +9,9 @@ var labelFormatInfo = mstrmojo.insert({
         {
             scriptClass: 'mstrmojo.Obj',
             alias: 'font',
-            font: '',
-            size: "10pt",
-            color: 'red',
+            name: 'Arial',
+            size: "10px",
+            color: 'black',
             bold: false,
             italic: false,
             underline: false
@@ -21,40 +20,57 @@ var labelFormatInfo = mstrmojo.insert({
             scriptClass: 'mstrmojo.Obj',
             alias: 'border',
             style: 'dotted',
-            size: '1pt',
-            color: 'green'
+            size: '0px',
+            color: 'black'
         }
     ]
 });
+
+var oriLabel = mstrmojo.insert({
+    scriptClass: 'mstrmojo.Label',
+    placeholder: 'labeldiv',
+    id: 'oriLabel',
+    text: 'click to change format',
+    onclick: function(evt) {
+        //TODO
+        alert("ok");
+        this.cssText = "color: red";
+    }
+
+});
+
+oriLabel.render();
 
 var w = mstrmojo.insert({
     scriptClass: "mstrmojo.VBox",
     placeholder: "topdiv",
     cssClass: "formatEditorBox",
+    id: "formatEditor",
     children: [
         {
             scriptClass: "mstrmojo.Label",
             id: "customedLabel",
             text: 'Abc123',
-            bindings: { //It can not be fired when values changed.
+            bindings: {
                 cssText: function() {
-                    Alert("???");
-                    var styleText = "font-family" + ":" + mstrmojo.all.labelName.value + ";";
-                    styleText += "font-size" + ":" + mstrmojo.all.labelSize.value + ";";
-                    styleText += "color" + ":" + mstrmojo.all.labelColor.value + ";";
-                    if (mstrmojo.all.labelBold.checked === true) {
-                        styleText += "font-weight" + ":" + "bold" + ";";
-                    } else {
-                        styleText += "font-weight" + ":" + "normal" + ";";
+                    Alert("binding is fired!");
+
+                    var styleText = "font-family" + ":" + labelFormatInfo.font.name + ";";
+                    styleText += "font-size" + ":" + labelFormatInfo.font.size + ";";
+                    styleText += "color" + ":" + labelFormatInfo.font.color + ";";
+                    if (labelFormatInfo.font.bold === true) {
+                        styleText += "font-weight: bold;";
+                    }
+                    if (labelFormatInfo.font.italic === true) {
+                        styleText += "font-style: italic;";
+                    }
+                    if (labelFormatInfo.font.underline === true) {
+                        styleText += "text-decoration: underline;";
                     }
 
-                    if (mstrmojo.all.labelItalic.checked === true) {
-                        styleText += "font-style" + ":" + "italic" + ";";
-                    } else {
-                        styleText += "font-style" + ":" + "normal" + ";";
-                    }
-
-                    styleText += "border" + ":" + mstrmojo.all.labelBorderStyle.value + " " + mstrmojo.all.labelBorderSize.value + " " + mstrmojo.all.labelBorderColor.value;
+                    styleText += "border-style: " + labelFormatInfo.border.style + ";";
+                    styleText += "border-width: " + labelFormatInfo.border.size + ";";
+                    styleText += "border-color: " + labelFormatInfo.border.color + ";";
 
                     return styleText;
                 }
@@ -71,6 +87,7 @@ var w = mstrmojo.insert({
                             [
                                 {
                                     scriptClass: "mstrmojo.VBox",
+                                    cssClass: "cell",
                                     children: [
                                         {
                                             scriptClass: "mstrmojo.Label",
@@ -80,12 +97,17 @@ var w = mstrmojo.insert({
                                         {
                                             scriptClass: "mstrmojo.TextBox",
                                             id: "labelName",
-                                            width: "75px"
+                                            cssClass: "inputBox",
+                                            value: labelFormatInfo.font.name,
+                                            onkeyup: function() {
+                                                labelFormatInfo.font.set("name", this.value);
+                                            }
                                         }
                                     ]
                                 },
                                 {
                                     scriptClass: "mstrmojo.VBox",
+                                    cssClass: "cell",
                                     children: [
                                         {
                                             scriptClass: "mstrmojo.Label",
@@ -93,14 +115,34 @@ var w = mstrmojo.insert({
                                             cssText: "white-space: nowrap"
                                         },
                                         {
-                                            scriptClass: "mstrmojo.TextBox",
+                                            scriptClass: "mstrmojo.List",
+                                            cssClass: "lists, inputBox",
+                                            value: labelFormatInfo.font.size,
                                             id: "labelSize",
-                                            width: "75px"
+                                            items: [
+                                                {sid: "0", val: "8px"},
+                                                {sid: "1", val: "10px"},
+                                                {sid: "2", val: "16px"},
+                                                {sid: "3", val: "28px"}
+                                            ],
+                                            itemMarkupFunction: function (item, index, widget) {
+                                                var styles = "font-size:" + item.val, s;
+                                                s = '<div style=' + styles;
+                                                if (widget.selectedItem === item) {
+                                                    s += 'class = "selected"';
+                                                }
+                                                s += ">" + item.val + '</div>';
+                                                return s;
+                                            },
+                                            onchange: function(evt) {
+                                                labelFormatInfo.font.set("size", this.selectedItem.val);
+                                            }
                                         }
                                     ]
                                 },
                                 {
                                     scriptClass: "mstrmojo.VBox",
+                                    cssClass: "cell",
                                     children: [
                                         {
                                             scriptClass: "mstrmojo.Label",
@@ -110,7 +152,11 @@ var w = mstrmojo.insert({
                                         {
                                             scriptClass: "mstrmojo.TextBox",
                                             id: "labelColor",
-                                            width: "75px"
+                                            value: labelFormatInfo.font.color,
+                                            cssClass: "inputBox",
+                                            onkeyup: function() {
+                                                labelFormatInfo.font.set("color", this.value);
+                                            }
                                         }
                                     ]
                                 }
@@ -118,22 +164,35 @@ var w = mstrmojo.insert({
                     },
                     {
                         scriptClass: "mstrmojo.VBox",
+                        cssClass: "cell",
                         children:
                             [
                                 {
                                     scriptClass: "mstrmojo.CheckBox",
                                     id: "labelBold",
-                                    label: "Bold"
+                                    label: "Bold",
+                                    checked: labelFormatInfo.font.bold,
+                                    oncheckedChange: function() {
+                                        labelFormatInfo.font.set("bold", this.checked);
+                                    }
                                 },
                                 {
                                     scriptClass: "mstrmojo.CheckBox",
                                     id: "labelItalic",
-                                    label: "Italic"
+                                    label: "Italic",
+                                    checked: labelFormatInfo.font.italic,
+                                    oncheckedChange: function() {
+                                        labelFormatInfo.font.set("italic", this.checked);
+                                    }
                                 },
                                 {
                                     scriptClass: "mstrmojo.CheckBox",
                                     id: "labelUnderline",
-                                    label: "Underline"
+                                    label: "Underline",
+                                    checked: labelFormatInfo.font.underline,
+                                    oncheckedChange: function() {
+                                        labelFormatInfo.font.set("underline", this.checked);
+                                    }
                                 }
                             ]
                     }
@@ -150,6 +209,7 @@ var w = mstrmojo.insert({
                             [
                                 {
                                     scriptClass: "mstrmojo.VBox",
+                                    cssClass: "cell",
                                     children: [
                                         {
                                             scriptClass: "mstrmojo.Label",
@@ -158,13 +218,18 @@ var w = mstrmojo.insert({
                                         },
                                         {
                                             scriptClass: "mstrmojo.TextBox",
-                                            width: "75px",
-                                            id: "labelBorderStyle"
+                                            cssClass: "inputBox",
+                                            id: "labelBorderStyle",
+                                            value: labelFormatInfo.border.style,
+                                            onkeyup: function() {
+                                                labelFormatInfo.border.set("style", this.value);
+                                            }
                                         }
                                     ]
                                 },
                                 {
                                     scriptClass: "mstrmojo.VBox",
+                                    cssClass: "cell",
                                     children: [
                                         {
                                             scriptClass: "mstrmojo.Label",
@@ -174,12 +239,17 @@ var w = mstrmojo.insert({
                                         {
                                             scriptClass: "mstrmojo.TextBox",
                                             id: 'labelBorderSize',
-                                            width: "75px"
+                                            cssClass: "inputBox",
+                                            value: labelFormatInfo.border.size,
+                                            onkeyup: function() {
+                                                labelFormatInfo.border.set("size", this.value);
+                                            }
                                         }
                                     ]
                                 },
                                 {
                                     scriptClass: "mstrmojo.VBox",
+                                    cssClass: "cell",
                                     children: [
                                         {
                                             scriptClass: "mstrmojo.Label",
@@ -189,9 +259,10 @@ var w = mstrmojo.insert({
                                         {
                                             scriptClass: "mstrmojo.TextBox",
                                             id: 'labelBorderColor',
-                                            width: "75px",
-                                            onvalueChange: function(evt) {
-                                                this.set('value', this.value);
+                                            cssClass: "inputBox",
+                                            value: labelFormatInfo.border.color,
+                                            onkeyup: function() {
+                                                labelFormatInfo.border.set("color", this.value);
                                             }
                                         }
                                     ]
@@ -205,50 +276,27 @@ var w = mstrmojo.insert({
             cssClass: "applyButton",
             text: "Apply",
             onclick: function(evt) {
-                labelFormatInfo.font.name = mstrmojo.all.labelName.value;
-                labelFormatInfo.font.size = mstrmojo.all.labelSize.value;
-                labelFormatInfo.font.color = mstrmojo.all.labelColor.value;
-                labelFormatInfo.font.bold = mstrmojo.all.labelBold.checked;
-                labelFormatInfo.font.italic = mstrmojo.all.labelItalic.checked;
-                labelFormatInfo.font.underline = mstrmojo.all.labelUnderline.checked;
-                labelFormatInfo.border.style = mstrmojo.all.labelBorderStyle.value;
-                labelFormatInfo.border.size = mstrmojo.all.labelBorderSize.value;
-                labelFormatInfo.border.color = mstrmojo.all.labelBorderColor.value;
-
                 var styleCssText = "color: " + labelFormatInfo.font.color
                     + "; font-size: " + labelFormatInfo.font.size
                     + "; font-family:" + labelFormatInfo.font.name
-                    + "; bold: " + labelFormatInfo.font.bold
-                    + "; italic: " + labelFormatInfo.font.italic
-                    + "; underline: " + labelFormatInfo.font.underline
                     + "; border-style: " + labelFormatInfo.border.style
                     + "; border-width: " + labelFormatInfo.border.size
                     + "; border-color: " + labelFormatInfo.border.color;
+                if (labelFormatInfo.font.bold === true) {
+                    styleCssText += "font-weight: bold;";
+                }
+                if (labelFormatInfo.font.italic === true) {
+                    styleCssText += "font-style: italic;";
+                }
+                if (labelFormatInfo.font.underline === true) {
+                    styleCssText += "text-decoration: underline;";
+                }
+
                 mstrmojo.all.customedLabel.cssText = styleCssText;
                 mstrmojo.all.oriLabel.cssText = styleCssText;
                 mstrmojo.all.customedLabel.render();
-
-                w.visible = false;
-                w.render();
-                oriLabel.visible = true;
-                oriLabel.render();
-            }
-        }
+                mstrmojo.all.oriLabel.reder();
+            } }
     ]
 });
-
-var oriLabel = mstrmojo.insert({
-    scriptClass: 'mstrmojo.Label',
-    placeholder: 'labeldiv',
-    id: 'oriLabel',
-    text: 'click to change format',
-    onclick: function(evt) {
-        oriLabel.visible = false;
-        w.visible = true;
-        w.render();
-        oriLabel.render();
-    }
-});
-
-w.visible = false;
-oriLabel.render();
+w.render();
