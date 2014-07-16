@@ -33,7 +33,7 @@ var oriLabel = mstrmojo.insert({
     text: 'click to change format',
     cssClass: 'mainText',
     onclick: function(evt) {
-
+        //TODO A  show formatEditor
     }
 });
 
@@ -72,7 +72,7 @@ var w = mstrmojo.insert({
 
                     return styleText;
                 }
-                //TODO can not binds to textBox.value
+                //TODO B can not binds to textBox.value
 //                text: function() {
 //                    alert("ok");
 //                    return mstrmojo.all.labelColor.value
@@ -267,7 +267,7 @@ var w = mstrmojo.insert({
                                             onkeyup: function() {
                                                 labelFormatInfo.border.set("color", this.value);
                                             }
-                                            //TODO can bind one value to another value
+                                            //TODO C can bind one value to another value
 //                                            bindings: {
 //                                                value: 'mstrmojo.all.labelColor.value'
 //                                            }
@@ -302,10 +302,23 @@ var w = mstrmojo.insert({
                 mstrmojo.all.oriLabel.cssText = styleCssText;
                 mstrmojo.all.oriLabel.render();
 
-                mstrmojo.all.customedLabel.cssText = styleCssText;
-                mstrmojo.all.customedLabel.render();
+
+                //TODO D hide formateditor, there is something left.
+                mstrmojo.all.formatEditor.cssText = "display: none";
+                mstrmojo.all.formatEditor.render();
             }
         }
     ]
 });
 w.render();
+
+/*
+* Questions Left:
+*
+* 1. How to display and hide widget. TODO A & TODO D
+*
+* 2. How to bind values. TODO B & TODO C
+*
+* 3. How to make an item selected state for mstrmojo.List
+*
+* */
