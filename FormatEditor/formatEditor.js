@@ -19,7 +19,7 @@ var labelFormatInfo = mstrmojo.insert({
         {
             scriptClass: 'mstrmojo.Obj',
             alias: 'border',
-            style: 'dotted',
+            style: 'none',
             size: '0px',
             color: 'black'
         }
@@ -65,7 +65,6 @@ var w = mstrmojo.insert({
                     if (labelFormatInfo.font.underline === true) {
                         styleText += "text-decoration: underline;";
                     }
-
                     styleText += "border-style: " + labelFormatInfo.border.style + ";";
                     styleText += "border-width: " + labelFormatInfo.border.size + ";";
                     styleText += "border-color: " + labelFormatInfo.border.color + ";";
@@ -119,14 +118,14 @@ var w = mstrmojo.insert({
                                         },
                                         {
                                             scriptClass: "mstrmojo.List",
-                                            cssClass: "lists, inputBox",
+                                            cssClass: "lists",
                                             value: labelFormatInfo.font.size,
                                             id: "labelSize",
                                             items: [
-                                                {sid: "0", val: "8px"},
-                                                {sid: "1", val: "10px"},
-                                                {sid: "2", val: "16px"},
-                                                {sid: "3", val: "28px"}
+                                                {sid: "0", val: "10px"},
+                                                {sid: "1", val: "12px"},
+                                                {sid: "2", val: "15px"},
+                                                {sid: "3", val: "19px"}
                                             ],
                                             itemMarkupFunction: function (item, index, widget) {
                                                 var styles = "font-size:" + item.val, s;
@@ -302,10 +301,9 @@ var w = mstrmojo.insert({
                 mstrmojo.all.oriLabel.cssText = styleCssText;
                 mstrmojo.all.oriLabel.render();
 
-
                 //TODO D hide formateditor, there is something left.
-                mstrmojo.all.formatEditor.cssText = "display: none";
-                mstrmojo.all.formatEditor.render();
+//                mstrmojo.all.formatEditor.cssText = "display: none";
+//                mstrmojo.all.formatEditor.render();
             }
         }
     ]
@@ -319,6 +317,6 @@ w.render();
 *
 * 2. How to bind values. TODO B & TODO C
 *
-* 3. How to make an item selected state for mstrmojo.List
+* 3. How to make an item selected in mstrmojo.List at initial state
 *
 * */
