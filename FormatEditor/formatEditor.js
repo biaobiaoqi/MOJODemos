@@ -31,12 +31,10 @@ var oriLabel = mstrmojo.insert({
     placeholder: 'labeldiv',
     id: 'oriLabel',
     text: 'click to change format',
+    cssClass: 'mainText',
     onclick: function(evt) {
-        //TODO
-        alert("ok");
-        this.cssText = "color: red";
-    }
 
+    }
 });
 
 oriLabel.render();
@@ -74,6 +72,11 @@ var w = mstrmojo.insert({
 
                     return styleText;
                 }
+                //TODO can not binds to textBox.value
+//                text: function() {
+//                    alert("ok");
+//                    return mstrmojo.all.labelColor.value
+//                }
             }
         },
         {
@@ -264,6 +267,10 @@ var w = mstrmojo.insert({
                                             onkeyup: function() {
                                                 labelFormatInfo.border.set("color", this.value);
                                             }
+                                            //TODO can bind one value to another value
+//                                            bindings: {
+//                                                value: 'mstrmojo.all.labelColor.value'
+//                                            }
                                         }
                                     ]
                                 }
@@ -292,11 +299,13 @@ var w = mstrmojo.insert({
                     styleCssText += "text-decoration: underline;";
                 }
 
-                mstrmojo.all.customedLabel.cssText = styleCssText;
                 mstrmojo.all.oriLabel.cssText = styleCssText;
+                mstrmojo.all.oriLabel.render();
+
+                mstrmojo.all.customedLabel.cssText = styleCssText;
                 mstrmojo.all.customedLabel.render();
-                mstrmojo.all.oriLabel.reder();
-            } }
+            }
+        }
     ]
 });
 w.render();
