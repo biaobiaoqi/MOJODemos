@@ -1,0 +1,67 @@
+table,th,td
+{
+    border:1px solid black;
+    border-collapse:collapse;
+    text-align: center;
+    -moz-user-select:none;
+    -webkit-user-select:none;
+}
+
+#back {
+    background: gray;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+#forward {
+    background: gray;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+th
+{
+    height: 25px
+}
+
+td
+{
+    padding:10px;
+    width: 20px;
+    height: 20px
+}
+
+.title
+{
+    background-color: whitesmoke;
+}
+
+#title
+{
+    position:absolute;
+    left:110px;
+    top:15px;
+    font-weight: bold;
+    font-size: large;
+}
+
+#note
+{
+    border: 2px solid gray;
+    height: 100px;
+}
+
+#notecontent
+{
+    width: 300px;
+    height: 100px;
+}
+
+.calendar-container{
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    position: absolute;
+}
