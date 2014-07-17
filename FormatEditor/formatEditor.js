@@ -122,19 +122,20 @@ var w = mstrmojo.insert({
                                                 {sid: "2", val: "15px"},
                                                 {sid: "3", val: "19px"}
                                             ],
+//                                        <div style="font-size:12px" class="selected">12px</div>
+//                                        <div style="font-size:15pxclass" =="" "selected"="">15px</div>
                                             itemMarkupFunction: function (item, index, widget) {
                                                 var styles = "font-size:" + item.val, s;
                                                 s = '<div style=' + styles;
                                                 if (widget.selectedItem === item) {
-                                                    s += 'class = "selected"';
+                                                    s += ' class="selected"';
                                                 }
                                                 s += ">" + item.val + '</div>';
                                                 return s;
                                             },
                                             onchange: function(evt) {
                                                 labelFormatInfo.font.set("size", this.selectedItem.val);
-                                            },
-                                            selectedIndex: 2
+                                            }
                                         }
                                     ]
                                 },
@@ -181,7 +182,7 @@ var w = mstrmojo.insert({
                                     scriptClass: "mstrmojo.CheckBox",
                                     id: "labelItalic",
                                     label: "Italic",
-                                    checked: true,
+                                    checked: labelFormatInfo.font.italic,
                                     oncheckedChange: function() {
                                         labelFormatInfo.font.set("italic", this.checked);
                                     }
@@ -293,5 +294,4 @@ mstrmojo.all.formatEditor.domNode.style.display="none";
 /*
 * Questions Left:
 * 3. How to make an item selected in mstrmojo.List at initial state. Also how to make checkbox checked through code.
-*
 * */
