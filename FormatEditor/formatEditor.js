@@ -5,6 +5,7 @@ var mstrConfig = mstrApp = {};
 
 var labelFormatInfo = mstrmojo.insert({
     scriptClass: "mstrmojo.Model",
+    id: 'format',   //If you want bindings, id can not be ignored!
     children: [
         {
             scriptClass: 'mstrmojo.Obj',
@@ -33,7 +34,7 @@ var oriLabel = mstrmojo.insert({
     text: 'click to change format',
     cssClass: 'mainText',
     onclick: function(evt) {
-        //TODO A  show formatEditor
+        mstrmojo.all.formatEditor.domNode.style.display="table";
     }
 });
 
@@ -44,6 +45,7 @@ var w = mstrmojo.insert({
     placeholder: "topdiv",
     cssClass: "formatEditorBox",
     id: "formatEditor",
+    alias: "formatEditor",
     children: [
         {
             scriptClass: "mstrmojo.Label",
@@ -51,31 +53,24 @@ var w = mstrmojo.insert({
             text: 'Abc123',
             bindings: {
                 cssText: function() {
-                    Alert("binding is fired!");
-
-                    var styleText = "font-family" + ":" + labelFormatInfo.font.name + ";";
-                    styleText += "font-size" + ":" + labelFormatInfo.font.size + ";";
-                    styleText += "color" + ":" + labelFormatInfo.font.color + ";";
-                    if (labelFormatInfo.font.bold === true) {
+                    var styleText = "font-family" + ":" + mstrmojo.all.format.font.name + ";";
+                    styleText += "font-size" + ":" + mstrmojo.all.format.font.size + ";";
+                    styleText += "color" + ":" + mstrmojo.all.format.font.color + ";";
+                    if (mstrmojo.all.format.font.bold === true) {
                         styleText += "font-weight: bold;";
                     }
-                    if (labelFormatInfo.font.italic === true) {
+                    if (mstrmojo.all.format.font.italic === true) {
                         styleText += "font-style: italic;";
                     }
-                    if (labelFormatInfo.font.underline === true) {
+                    if (mstrmojo.all.format.font.underline === true) {
                         styleText += "text-decoration: underline;";
                     }
-                    styleText += "border-style: " + labelFormatInfo.border.style + ";";
-                    styleText += "border-width: " + labelFormatInfo.border.size + ";";
-                    styleText += "border-color: " + labelFormatInfo.border.color + ";";
+                    styleText += "border-style: " + mstrmojo.all.format.border.style + ";";
+                    styleText += "border-width: " + mstrmojo.all.format.border.size + ";";
+                    styleText += "border-color: " + mstrmojo.all.format.border.color + ";";
 
                     return styleText;
                 }
-                //TODO B can not binds to textBox.value
-//                text: function() {
-//                    alert("ok");
-//                    return mstrmojo.all.labelColor.value
-//                }
             }
         },
         {
@@ -138,7 +133,8 @@ var w = mstrmojo.insert({
                                             },
                                             onchange: function(evt) {
                                                 labelFormatInfo.font.set("size", this.selectedItem.val);
-                                            }
+                                            },
+                                            selectedIndex: 2
                                         }
                                     ]
                                 },
@@ -156,9 +152,12 @@ var w = mstrmojo.insert({
                                             id: "labelColor",
                                             value: labelFormatInfo.font.color,
                                             cssClass: "inputBox",
-                                            onkeyup: function() {
+                                            onblur: function() {
                                                 labelFormatInfo.font.set("color", this.value);
                                             }
+                                            /*onkeyup: function() {
+                                                labelFormatInfo.font.set("color", this.value);
+                                            }*/
                                         }
                                     ]
                                 }
@@ -182,7 +181,7 @@ var w = mstrmojo.insert({
                                     scriptClass: "mstrmojo.CheckBox",
                                     id: "labelItalic",
                                     label: "Italic",
-                                    checked: labelFormatInfo.font.italic,
+                                    checked: true,
                                     oncheckedChange: function() {
                                         labelFormatInfo.font.set("italic", this.checked);
                                     }
@@ -266,10 +265,6 @@ var w = mstrmojo.insert({
                                             onkeyup: function() {
                                                 labelFormatInfo.border.set("color", this.value);
                                             }
-                                            //TODO C can bind one value to another value
-//                                            bindings: {
-//                                                value: 'mstrmojo.all.labelColor.value'
-//                                            }
                                         }
                                     ]
                                 }
@@ -282,41 +277,21 @@ var w = mstrmojo.insert({
             cssClass: "applyButton",
             text: "Apply",
             onclick: function(evt) {
-                var styleCssText = "color: " + labelFormatInfo.font.color
-                    + "; font-size: " + labelFormatInfo.font.size
-                    + "; font-family:" + labelFormatInfo.font.name
-                    + "; border-style: " + labelFormatInfo.border.style
-                    + "; border-width: " + labelFormatInfo.border.size
-                    + "; border-color: " + labelFormatInfo.border.color;
-                if (labelFormatInfo.font.bold === true) {
-                    styleCssText += "font-weight: bold;";
-                }
-                if (labelFormatInfo.font.italic === true) {
-                    styleCssText += "font-style: italic;";
-                }
-                if (labelFormatInfo.font.underline === true) {
-                    styleCssText += "text-decoration: underline;";
-                }
-
-                mstrmojo.all.oriLabel.cssText = styleCssText;
+                mstrmojo.all.oriLabel.cssText = mstrmojo.all.customedLabel.cssText;
                 mstrmojo.all.oriLabel.render();
 
-                //TODO D hide formateditor, there is something left.
-//                mstrmojo.all.formatEditor.cssText = "display: none";
-//                mstrmojo.all.formatEditor.render();
+                //There is some bugs with VBox and its  table implementation.
+                //Using display tag in style of dom node to hide the widget.
+                mstrmojo.all.formatEditor.domNode.style.display="none";
             }
         }
     ]
 });
-w.render();
 
+w.render();
+mstrmojo.all.formatEditor.domNode.style.display="none";
 /*
 * Questions Left:
-*
-* 1. How to display and hide widget. TODO A & TODO D
-*
-* 2. How to bind values. TODO B & TODO C
-*
-* 3. How to make an item selected in mstrmojo.List at initial state
+* 3. How to make an item selected in mstrmojo.List at initial state. Also how to make checkbox checked through code.
 *
 * */
