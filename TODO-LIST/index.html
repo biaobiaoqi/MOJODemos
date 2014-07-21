@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mojo Ninja - Todo List</title>
+  <link rel="icon" type="image/gif" href="/favicon.ico">
+  <script>
+  //ensure some dirty code works
+  mstrApp = {};
+  </script>
+  <link href="/javascript/mojo/css/core.css" type="text/css" rel="stylesheet">
+  <link href="/main.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+  <div  id="todo-list"></div>
+  <script>
+  window.onload = function(){
+    // TODO: please replace it with your TodoList class
+  	mstrmojo.requiresCls('mstrmojo.Label');
+  	label = new mstrmojo.Label({
+      placeholder: 'todo-list',
+  		text: 'Let\'s begin!!'
+  	});
+  	label.render();
+  }
+  </script>
+</body>
+</html>
